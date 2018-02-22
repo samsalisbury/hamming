@@ -25,3 +25,13 @@ func (ns Nibbles) Bytes() []byte {
 	}
 	return output
 }
+
+// PopCount returns the number of on bits in the byte.
+func PopCount(b byte) byte {
+	var c byte
+	for b != 0 {
+		b &= b - 1
+		c++
+	}
+	return c
+}
