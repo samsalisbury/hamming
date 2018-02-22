@@ -5,7 +5,7 @@ import "testing"
 func TestPopCount(t *testing.T) {
 
 	testCases := []struct {
-		in, want byte
+		in, want Nibble
 	}{
 		{0, 0},
 		{1, 1},

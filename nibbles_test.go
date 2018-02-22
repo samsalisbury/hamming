@@ -17,7 +17,7 @@ func TestDisasembleNibbles(t *testing.T) {
 
 	// Nibbles will hold bytes where the 4 least significant bits
 	// contain a nibble of the source data.
-	nibbles := Nibble(source)
+	nibbles := BytesToNibbles(source)
 	if len(nibbles) != 2*len(source) {
 		t.Fatalf("got %d nibbles; want %d (2x)", len(nibbles), 2*len(source))
 	}
