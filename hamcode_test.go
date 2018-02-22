@@ -102,8 +102,40 @@ func TestHamErrCorrect(t *testing.T) {
 	}
 
 }
-
 func HamErrCorrect(e byte, syn Nibble) byte {
 	v := byte(1 << (syn - 1))
 	return e ^ v
+}
+
+func TestHamDecode(t *testing.T) {
+
+	cases := map[byte]Nibble{
+		0:   0,
+		105: 1,
+		42:  2,
+		67:  3,
+		76:  4,
+		51:  11,
+		127: 15,
+	}
+
+	for i := byte(0); i < 127; i++ {
+		want, ok := cases[i]
+		if !ok {
+			continue
+		}
+		got := HamDecode(i)
+		if got != want {
+			t.Errorf("HamDecode(%07b) == %04b; want %04b", i, got, want)
+		}
+	}
+}
+
+func HamDecode(b byte) Nibble {
+	matrix := [4]byte{16, 4, 2, 1}
+	var n Nibble
+	for i := Nibble(0); i < 4; i++ {
+		n |= (PopCountByte(matrix[i]&b) % 2) << (3 - i)
+	}
+	return n
 }
