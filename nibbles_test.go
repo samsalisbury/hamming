@@ -46,27 +46,25 @@ func TestDisasembleNibbles(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Nibbles will hold bytes where the 4 least significant bits
-	// contain a nibble of the source data.
-	nibbles := make([]byte, 2*len(source))
-
 	fmt.Printf("Source length: %d bytes\n", len(source))
 
-	for i, b := range source {
-		first := b >> 4
-		second := (b & 15)
-		nibbles[i*2] = first
-		nibbles[(i*2)+1] = second
-
-		if i < 10 || len(source)-i < 10 {
-			fmt.Printf("byte %05d %08b = nibbles %08b + %08b\n", i, b, first, second)
+	// Nibbles will hold bytes where the 4 least significant bits
+	// contain a nibble of the source data.
+	nibbles := Nibble(source)
+	if len(nibbles) != 2*len(source) {
+		t.Fatalf("got %d nibbles; want %d (2x)", len(nibbles), 2*len(source))
+	}
+	for i := 0; i < len(source); i++ {
+		if i == 10 {
+			// Fast forward to last 10 bytes.
+			i = len(source) - 10
 		}
+		first, second := nibbles[2*i], nibbles[(2*i)+1]
+		b := source[i]
+		fmt.Printf("byte %05d %08b = nibbles %08b + %08b\n", i, b, first, second)
 	}
 
-	output := make([]byte, len(source))
-	for i := range output {
-		output[i] = (nibbles[i*2] << 4) | (nibbles[(i*2)+1])
-	}
+	output := nibbles.Bytes()
 
 	for i := range source {
 		if source[i] != output[i] {
