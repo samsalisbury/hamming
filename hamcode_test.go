@@ -83,3 +83,27 @@ func HamParityCheck(b byte) Nibble {
 	}
 	return syndrome
 }
+
+func TestHamErrCorrect(t *testing.T) {
+
+	cases := []struct {
+		faulty   byte
+		syndrome Nibble
+		want     byte
+	}{
+		{faulty: 118, syndrome: 5, want: 102},
+	}
+	for _, c := range cases {
+		got := HamErrCorrect(c.faulty, c.syndrome)
+		if got != c.want {
+			t.Errorf("HamErrCorrect(%07b, %04b) == %07b; want %07b",
+				c.faulty, c.syndrome, got, c.want)
+		}
+	}
+
+}
+
+func HamErrCorrect(e byte, syn Nibble) byte {
+	v := byte(1 << (syn - 1))
+	return e ^ v
+}
