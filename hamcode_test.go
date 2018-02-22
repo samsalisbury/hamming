@@ -35,16 +35,6 @@ func TestHamCode(t *testing.T) {
 	}
 }
 
-// HamCode returns 7/4 ham encoded byte of input data nibble.
-func HamCode(b Nibble) byte {
-	matrix := [7]Nibble{13, 11, 8, 7, 4, 2, 1}
-	var code byte
-	for i := byte(0); i < 7; i++ {
-		code |= byte((PopCount(matrix[i]&b) % 2) << (6 - i))
-	}
-	return code
-}
-
 func TestHamParityCheck(t *testing.T) {
 
 	// Generate full set of valid codes, ensure they have zero syndrome.
@@ -73,17 +63,6 @@ func TestHamParityCheck(t *testing.T) {
 
 }
 
-// HamParityCheck returns a number indicating which bit is wrong, or zero if all
-// bits are correct.
-func HamParityCheck(b byte) Nibble {
-	matrix := [3]byte{85, 51, 15}
-	var syndrome Nibble
-	for i := Nibble(0); i < 3; i++ {
-		syndrome |= (PopCountByte(matrix[i]&b) % 2) << (2 - i)
-	}
-	return syndrome
-}
-
 func TestHamErrCorrect(t *testing.T) {
 
 	cases := []struct {
@@ -101,10 +80,6 @@ func TestHamErrCorrect(t *testing.T) {
 		}
 	}
 
-}
-func HamErrCorrect(e byte, syn Nibble) byte {
-	v := byte(1 << (syn - 1))
-	return e ^ v
 }
 
 func TestHamDecode(t *testing.T) {
@@ -129,13 +104,4 @@ func TestHamDecode(t *testing.T) {
 			t.Errorf("HamDecode(%07b) == %04b; want %04b", i, got, want)
 		}
 	}
-}
-
-func HamDecode(b byte) Nibble {
-	matrix := [4]byte{16, 4, 2, 1}
-	var n Nibble
-	for i := Nibble(0); i < 4; i++ {
-		n |= (PopCountByte(matrix[i]&b) % 2) << (3 - i)
-	}
-	return n
 }
