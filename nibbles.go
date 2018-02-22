@@ -39,3 +39,13 @@ func PopCount(b Nibble) Nibble {
 	}
 	return c
 }
+
+// PopCountByte returns the number of on bits in the Nibble.
+func PopCountByte(b byte) Nibble {
+	var c Nibble
+	for b != 0 {
+		b &= b - 1
+		c++
+	}
+	return c
+}

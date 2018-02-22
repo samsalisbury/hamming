@@ -44,3 +44,42 @@ func HamCode(b Nibble) byte {
 	}
 	return code
 }
+
+func TestHamParityCheck(t *testing.T) {
+
+	// Generate full set of valid codes, ensure they have zero syndrome.
+	for i := Nibble(0); i < 16; i++ {
+		in := HamCode(i)
+		if got := HamParityCheck(in); got != 0 {
+			t.Errorf("HamParityCheck(%07b) == %04b; want %04b", in, got, 0)
+		}
+	}
+
+	cases := []struct {
+		in   byte
+		want Nibble
+	}{
+		{in: 52, want: 1},
+		{in: 86, want: 4},
+		{in: 43, want: 7},
+	}
+
+	for _, c := range cases {
+		got := HamParityCheck(c.in)
+		if got != c.want {
+			t.Errorf("HamParityCheck(%07b) == %04b; want %04b", c.in, got, c.want)
+		}
+	}
+
+}
+
+// HamParityCheck returns a number indicating which bit is wrong, or zero if all
+// bits are correct.
+func HamParityCheck(b byte) Nibble {
+	matrix := [3]byte{85, 51, 15}
+	var syndrome Nibble
+	for i := Nibble(0); i < 3; i++ {
+		syndrome |= (PopCountByte(matrix[i]&b) % 2) << (2 - i)
+	}
+	return syndrome
+}
