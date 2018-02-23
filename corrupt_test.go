@@ -7,10 +7,6 @@ import (
 	"testing"
 )
 
-func RandomlyCorrupt(b *byte) {
-	*b = *b + (1 << (rand.Uint64() % 8))
-}
-
 func TestRandomlyCorrupt(t *testing.T) {
 
 	source, err := ioutil.ReadFile("hc.png")
