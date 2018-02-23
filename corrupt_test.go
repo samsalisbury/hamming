@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func randomlyCorrupt(b *byte) {
+func RandomlyCorrupt(b *byte) {
 	*b = *b + (1 << (rand.Uint64() % 8))
 }
 
@@ -28,7 +28,7 @@ func TestRandomlyCorrupt(t *testing.T) {
 				continue
 			}
 			if rand.Intn(10) < 8 {
-				randomlyCorrupt(&corrupted[i])
+				RandomlyCorrupt(&corrupted[i])
 			}
 		}
 
