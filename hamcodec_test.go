@@ -61,10 +61,14 @@ func TestHamCodec(t *testing.T) {
 
 	fmt.Printf("Decoded: %d bytes\n", decoded.Len())
 
+	numStillCorrupted := 0
 	for i, d := range decodedBytes {
 		if d != source[i] {
-			t.Fatalf("bytes still corrupted")
+			numStillCorrupted++
 		}
+	}
+	if numStillCorrupted != 0 {
+		t.Fatalf("Bytes still corrupted: %d", numStillCorrupted)
 	}
 
 }
